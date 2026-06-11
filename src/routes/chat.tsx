@@ -12,7 +12,7 @@ import { Toaster } from "@/components/ui/sonner";
 export const Route = createFileRoute("/chat")({
   head: () => ({
     meta: [
-      { title: "مساعد أهلّه" },
+      { title:  " مساعد فقهي" },
       {
         name: "description",
         content: "مساعد ذكي يجيب على أسئلتك الفقهية وفقاً للمذهب الشافعي المعتمد.",
@@ -101,7 +101,7 @@ function ChatPage() {
         <div className="relative z-20 mx-auto flex max-w-3xl items-center justify-center gap-10 text-center">
           <div>
             <h1 className="font-display text-10xl font-bold tracking-wide text-gradient-gold sm:text-5xl w-full px-1 py-6">
-              مساعد أهلّه
+  مساعد فقهي
             </h1>
             <p className="mt-1 text-xs tracking-[0.3em] text-white/80 sm:text-sm">
               إجابات وفق المذهب الشافعي المعتمد
