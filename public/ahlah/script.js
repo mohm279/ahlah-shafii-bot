@@ -442,9 +442,9 @@ keepAwake();
 
    
 
-    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-      navigator.serviceWorker.register('sw.js').catch(function () {});
-    }
+//    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+//      navigator.serviceWorker.register('sw.js').catch(function () {});
+ //   }
   });
 
   const oldOpenSidebar = window.openSidebar;

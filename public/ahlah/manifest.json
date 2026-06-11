@@ -2,7 +2,7 @@
   "name": "أهلّه - Ahlah",
   "short_name": "Ahlah",
   "description": "منصة إسلامية لأوقات الصلاة، القرآن الكريم، الأذكار، التقويم، والقبلة.",
-  "start_url": "./index.html",
+  "start_url": "/ahlah/index.html",
   "scope": "./",
   "display": "standalone",
   "dir": "rtl",
