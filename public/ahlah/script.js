@@ -440,21 +440,7 @@ keepAwake();
       qibla.addEventListener('click', function () { showPopup('qibla-alert-popup'); });
     }
 
-    const timeBox = safe('current-time');
-    if (timeBox) {
-      function updateClock() {
-        const selected = document.querySelector('input[name="time-format"]:checked');
-        const hour12 = !selected || selected.value === '12';
-        timeBox.textContent = new Intl.DateTimeFormat('ar-JO', {
-          hour: '2-digit', minute: '2-digit', second: '2-digit', hour12
-        }).format(new Date());
-      }
-      updateClock();
-      setInterval(updateClock, 1000);
-      document.querySelectorAll('input[name="time-format"]').forEach(function (radio) {
-        radio.addEventListener('change', updateClock);
-      });
-    }
+   
 
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
       navigator.serviceWorker.register('sw.js').catch(function () {});
