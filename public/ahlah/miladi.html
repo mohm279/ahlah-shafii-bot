@@ -10,104 +10,138 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        .calendar {
-            margin: 20px auto;
-            max-width: 800px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+        .container {
+            width: min(100% - 24px, 980px);
+            margin-inline: auto;
+            padding: 18px 0 28px;
+        }
+
+        .date-info {
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 10px 30px rgba(27, 94, 32, 0.12);
+            padding: 16px;
+            border-radius: 18px;
+            margin: 0 auto 18px;
+            text-align: center;
             direction: rtl;
+            border: 1px solid rgba(201, 168, 76, 0.25);
         }
         
-        .calendar h3 {
+        .date-info p {
+            margin: 6px 0;
+            font-size: clamp(15px, 3.8vw, 18px);
             color: #2E7D32;
-            font-size: 24px;
-            margin-bottom: 15px;
-            text-align: center;
+            font-weight: 700;
+            line-height: 1.7;
         }
-        
-        .calendar table {
+
+        .calendar {
+            margin: 0 auto;
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        
-        .calendar th, .calendar td {
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-        
-        .calendar th {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .calendar td {
-            font-size: 16px;
-            color: #000000;
-        }
-        
-        .calendar td.today {
-            background-color: #e8f5e9;
-            font-weight: bold;
-            color: #2E7D32;
-        }
-        
-        .calendar td:hover {
-            background-color: #f5f5f5;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 22px;
+            box-shadow: 0 14px 40px rgba(27, 94, 32, 0.14);
+            padding: 18px;
+            direction: rtl;
+            overflow: hidden;
+            border: 1px solid rgba(201, 168, 76, 0.25);
         }
         
         .month-navigation {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
             margin-bottom: 15px;
             direction: rtl;
         }
         
         .month-navigation button {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 10px 14px;
+            border-radius: 999px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 700;
+            box-shadow: 0 8px 18px rgba(46, 125, 50, 0.20);
+            white-space: nowrap;
         }
         
         .month-navigation button:hover {
-            background-color: #45a049;
+            filter: brightness(1.05);
         }
         
         .month-navigation .current-month {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: clamp(17px, 4.5vw, 23px);
+            font-weight: 800;
             color: #2E7D32;
             display: flex;
             align-items: center;
-        }
-        
-        .date-info {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            justify-content: center;
+            min-width: 130px;
             text-align: center;
-            direction: rtl;
+        }
+
+        .calendar-table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 16px;
         }
         
-        .date-info p {
-            margin: 5px 0;
-            font-size: 18px;
-            color: #2E7D32;
+        .calendar table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4px;
+            table-layout: fixed;
+            min-width: 0;
+        }
+        
+        .calendar th, .calendar td {
+            text-align: center;
+            border: 0;
+            border-radius: 12px;
+        }
+        
+        .calendar th {
+            background: linear-gradient(135deg, #2E7D32, #4CAF50);
+            color: white;
+            font-weight: 700;
+            padding: 10px 4px;
+            font-size: clamp(11px, 2.9vw, 15px);
+        }
+        
+        .calendar td {
+            height: 48px;
+            font-size: clamp(14px, 4vw, 18px);
+            color: #1c2b27;
+            background: #faf7ed;
+            font-weight: 700;
+        }
+        
+        .calendar td:empty {
+            background: transparent;
+        }
+        
+        .calendar td.today {
+            background: linear-gradient(135deg, #f0d78c, #c9a84c);
+            font-weight: 900;
+            color: #1B5E20;
+            box-shadow: 0 8px 18px rgba(201, 168, 76, 0.35);
+        }
+        
+        .calendar td:not(:empty):hover {
+            background-color: #e8f5e9;
         }
 
         .sidebar {
             display: none; 
             position: fixed;
-            width: 250px;
+            width: min(280px, 86vw);
             height: 100%;
             background-color: #f4f4f4;
             z-index: 1000;
@@ -120,9 +154,94 @@
             color: #333;
             float: left;
         }
-    </style>
+
+        @media (max-width: 600px) {
+            body {
+                overflow-x: hidden;
+            }
+
+            .header {
+                padding: 22px 12px 28px;
+                border-bottom-left-radius: 22px;
+                border-bottom-right-radius: 22px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .header h2 {
+                font-size: 17px;
+            }
+
+            #home-logo {
+                width: 60px;
+                height: 60px;
+            }
+
+            .menu-icon {
+                font-size: 24px;
+            }
+
+            .container {
+                width: calc(100% - 16px);
+                padding-top: 12px;
+            }
+
+            .calendar {
+                padding: 10px;
+                border-radius: 18px;
+            }
+
+            .date-info {
+                padding: 12px 10px;
+                border-radius: 16px;
+                margin-bottom: 12px;
+            }
+
+            .month-navigation {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .month-navigation .current-month {
+                order: -1;
+                min-width: auto;
+            }
+
+            .month-navigation button {
+                width: 100%;
+                padding: 11px 10px;
+                font-size: 14px;
+            }
+
+            .calendar table {
+                border-spacing: 3px;
+            }
+
+            .calendar th {
+                font-size: 0;
+                padding: 8px 2px;
+            }
+
+            .calendar th::first-letter {
+                font-size: 13px;
+            }
+
+            .calendar td {
+                height: 38px;
+                border-radius: 9px;
+                font-size: 15px;
+            }
+        }
+    .home-logo-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;}
+</style>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2E7D32">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
     <floraspace>
@@ -134,11 +253,10 @@
 
     <div id="sidebar" class="sidebar">
         <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">×</a>
-        <a href="javascript:void(0)" onclick="goToHomePage()"> 
+        <a href="index.html"> 
             <img loading="lazy" decoding="async" src="https://i.ibb.co/yPXjrLy/image.png" alt="العودة للصفحة الرئيسية">
             العودة للصفحة الرئيسية
         </a>
-        
     </div>
 
     <div class="header">
@@ -147,7 +265,7 @@
             <h1>أهلّه</h1>
             <h2>التقويم الميلادي</h2>
         </div>
-        <img loading="lazy" decoding="async" id="home-logo" src="https://i.ibb.co/B59zjpGn/2.png" alt="صورة أهلّه">
+        <a href="index.html" class="home-logo-link"><img loading="lazy" decoding="async" id="home-logo" src="https://i.ibb.co/B59zjpGn/2.png" alt="صورة أهلّه"></a>
     </div>
 
     <div class="container">
@@ -163,26 +281,28 @@
                 <button onclick="nextMonth()">الشهر التالي</button>
             </div>
             
-            <table>
+            <div class="calendar-table-wrap">
+                <table>
                 <thead>
                     <tr>
-                        <th>الأحد</th>
-                        <th>الإثنين</th>
-                        <th>الثلاثاء</th>
-                        <th>الأربعاء</th>
-                        <th>الخميس</th>
-                        <th>الجمعة</th>
-                        <th>السبت</th>
+                        <th title="الأحد">أ</th>
+                        <th title="الإثنين">إ</th>
+                        <th title="الثلاثاء">ث</th>
+                        <th title="الأربعاء">أ</th>
+                        <th title="الخميس">خ</th>
+                        <th title="الجمعة">ج</th>
+                        <th title="السبت">س</th>
                     </tr>
                 </thead>
                 <tbody id="calendar-body">
                 </tbody>
             </table>
+            </div>
         </div>
 
     </div>
 
-    <div class="footer">&copy; 2026 Ahlah </div>
+    <div class="footer">&copy; <span id="currentYear"></span> Ahlah </div>
 
     <div id="overlay" class="overlay" onclick="closePopup()"></div>
 
@@ -212,10 +332,10 @@
         
         function updateCurrentDateDisplay() {
             const today = new Date();
-            const hijriDate = gregorianToHijri(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            const hijriDate = getHijriDate(today);
             
             document.getElementById('current-hijri-date').textContent = 
-                `التاريخ الهجري الحالي: ${Math.floor(hijriDate.day)} ${hijriMonths[hijriDate.month - 1]} ${hijriDate.year}`;
+                `التاريخ الهجري الحالي: ${hijriDate.day} ${hijriDate.month} ${hijriDate.year} هـ`;
             document.getElementById('current-gregorian-date').textContent = 
                 `التاريخ الميلادي الحالي: ${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
             document.getElementById('current-month').textContent = 
@@ -286,54 +406,65 @@
             generateCalendar(currentYear, currentMonth);
         }
         
-        function gregorianToHijri(year, month, day) {
+        function getHijriDate(date = new Date()) {
+            try {
+                const formatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+
+                const parts = formatter.formatToParts(date);
+                const day = parts.find(part => part.type === 'day')?.value || '';
+                const month = parts.find(part => part.type === 'month')?.value || '';
+                const year = parts.find(part => part.type === 'year')?.value || '';
+
+                return { day, month, year };
+            } catch (error) {
+                return getHijriDateFallback(date);
+            }
+        }
+
+        function getHijriDateFallback(date = new Date()) {
             const ISLAMIC_EPOCH = 1948439.5;
-            const GREGORIAN_EPOCH = 1721425.5;
             
             function gregorianToJulianDay(y, m, d) {
                 if (m <= 2) {
                     y -= 1;
                     m += 12;
                 }
-                
                 const a = Math.floor(y / 100);
                 const b = 2 - a + Math.floor(a / 4);
-                
                 return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + b - 1524.5;
             }
-            
+
+            function julianDayFromHijri(year, month, day) {
+                return (day + Math.ceil(29.5 * (month - 1)) + (year - 1) * 354 +
+                    Math.floor((3 + (11 * year)) / 30) + ISLAMIC_EPOCH) - 1;
+            }
+
             function julianDayToHijri(jd) {
                 jd = Math.floor(jd) + 0.5;
-                
                 const year = Math.floor(((30 * (jd - ISLAMIC_EPOCH)) + 10646) / 10631);
-                
                 let month = Math.min(12, Math.ceil((jd - (29 + julianDayFromHijri(year, 1, 1))) / 29.5) + 1);
-                
-                if (jd < julianDayFromHijri(year, month, 1)) {
-                    month--;
-                }
-                
-                const day = (jd - julianDayFromHijri(year, month, 1)) + 1;
-                
-                return { year, month, day: Math.floor(day) };
+                if (jd < julianDayFromHijri(year, month, 1)) month--;
+                const day = Math.floor((jd - julianDayFromHijri(year, month, 1)) + 1);
+                return { day, month: hijriMonths[month - 1], year };
             }
-            
-            function julianDayFromHijri(year, month, day) {
-                return (day + Math.ceil(29.5 * (month - 1)) + (year - 1) * 354 + 
-                       Math.floor((3 + (11 * year)) / 30) + ISLAMIC_EPOCH) - 1;
-            }
-            
-            const julianDay = gregorianToJulianDay(year, month, day);
-            
-            return julianDayToHijri(julianDay);
+
+            return julianDayToHijri(gregorianToJulianDay(date.getFullYear(), date.getMonth() + 1, date.getDate()));
         }
 
         function openSidebar() {
-            document.getElementById("sidebar").style.display = "block";
+            const sidebar = document.getElementById("sidebar");
+            sidebar.style.display = "block";
+            sidebar.style.width = "250px";
         }
 
         function closeSidebar() {
-            document.getElementById("sidebar").style.display = "none";
+            const sidebar = document.getElementById("sidebar");
+            sidebar.style.width = "0";
+            sidebar.style.display = "none";
         }
 
         function goToHomePage() {
@@ -345,5 +476,14 @@
         };
     </script>
     <script src="script.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .catch((error) => console.log('Service Worker registration failed:', error));
+    });
+  }
+</script>
 </body>
 </html>

@@ -11,8 +11,11 @@ function toggleSubMenu(subMenuId) {
     subMenu.style.display = subMenu.style.display === "block" ? "none" : "block";
 }
 
-document.getElementById("home-logo").onclick = function() {
-    window.location.href = "index.html"; 
+const homeLogoMain = document.getElementById("home-logo");
+if (homeLogoMain) {
+    homeLogoMain.onclick = function() {
+        window.location.href = "index.html";
+    };
 }
 
 function showPopup(popupId) {
@@ -359,8 +362,12 @@ function showHijriDatePopup() {
 }
 
 function updateCurrentTime() {
+    const currentTimeElement = document.getElementById('current-time');
+    if (!currentTimeElement) return;
+
     const now = new Date();
-    const timeFormat = document.querySelector('input[name="time-format"]:checked').value;
+  const selectedFormat = document.querySelector('input[name="time-format"]:checked');
+  const timeFormat = selectedFormat ? selectedFormat.value : "12";
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, '0');
     let ampm = '';
@@ -374,7 +381,7 @@ function updateCurrentTime() {
         ? `${hours}:${minutes} ${ampm}` 
         : `${String(hours).padStart(2, '0')}:${minutes}`;
 
-    document.getElementById('current-time').textContent = formattedTime;
+    currentTimeElement.textContent = formattedTime;
 }
 
 setInterval(updateCurrentTime, 60000);
@@ -406,9 +413,12 @@ function searchSurah() {
         surahLinks[i].style.display = surahText.includes(input) ? 'block' : 'none';
     }
 }
-document.getElementById("openQibla").addEventListener("click", function() {
-    showPopup('qibla-alert-popup');
-});
+const openQiblaLink = document.getElementById("openQibla");
+if (openQiblaLink) {
+    openQiblaLink.addEventListener("click", function() {
+        showPopup('qibla-alert-popup');
+    });
+}
 let wakeLock = null;
 
 async function keepAwake() {
@@ -427,6 +437,30 @@ keepAwake();
 /* تحسينات عامة بدون تقسيم ملف السكربت */
 (function () {
   function safe(id) { return document.getElementById(id); }
+
+  function renderPrayerTodayDate() {
+    const dateBox = document.getElementById('prayer-today-date');
+    if (!dateBox) return;
+
+    const now = new Date();
+    let hijriDate = '';
+
+    try {
+      hijriDate = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }).format(now);
+    } catch (error) {
+      hijriDate = now.toLocaleDateString('ar-SA-u-ca-islamic', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+
+    dateBox.textContent = 'هجري: ' + hijriDate;
+  }
 
   document.addEventListener('DOMContentLoaded', function () {
     const logo = safe('home-logo');
@@ -473,3 +507,86 @@ keepAwake();
     }
   });
 })();
+
+/* تم حذف قسم AlAdhan والأذان لأن النسخة الحالية تستخدم iframe القديم للمواقيت. */
+
+/* تحسينات تحميل النصوص الطويلة من JSON عند الطلب */
+const ahlahJsonCache = {};
+
+async function getAhlahJson(fileName) {
+    if (ahlahJsonCache[fileName]) return ahlahJsonCache[fileName];
+    const response = await fetch(fileName);
+    if (!response.ok) throw new Error('فشل تحميل ' + fileName);
+    const data = await response.json();
+    ahlahJsonCache[fileName] = data;
+    return data;
+}
+
+async function loadJsonContent(targetId) {
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    const jsonFile = target.dataset.json;
+    const jsonKey = target.dataset.key;
+    if (!jsonFile || !jsonKey) return;
+
+    if (target.dataset.loaded === 'true') return;
+    target.innerHTML = 'جارٍ التحميل...';
+
+    try {
+        const data = await getAhlahJson(jsonFile);
+        target.innerHTML = data[jsonKey] || 'النص غير موجود.';
+        target.dataset.loaded = 'true';
+    } catch (error) {
+        console.error(error);
+        target.innerHTML = 'حدث خطأ أثناء تحميل النص.';
+    }
+}
+
+/* القرآن الآن يُقرأ من quran.json بدل النصوص المخفية داخل index.html */
+async function showSurahContentPopup(surahNumber) {
+    currentSurahIndex = surahNumber - 1;
+    const surahTitle = surahList[currentSurahIndex];
+    const title = document.getElementById('surah-title');
+    const text = document.getElementById('surah-text');
+    if (title) title.textContent = `سورة ${surahTitle}`;
+    if (text) text.innerHTML = 'جارٍ التحميل...';
+
+    try {
+        const data = await getAhlahJson('quran.json');
+        if (text) text.innerHTML = data.surahs[String(surahNumber)] || 'النص غير موجود.';
+    } catch (error) {
+        console.error(error);
+        if (text) text.innerHTML = 'حدث خطأ أثناء تحميل السورة.';
+    }
+
+    if (typeof updateNavigationButtons === 'function') updateNavigationButtons('surah', surahNumber);
+    showPopup('surah-content-popup');
+}
+
+async function showPartContentPopup(partNumber) {
+    currentPartIndex = partNumber - 1;
+    const partTitle = partsList[currentPartIndex];
+    const title = document.getElementById('part-title');
+    const text = document.getElementById('part-text');
+    if (title) title.textContent = partTitle;
+    if (text) text.innerHTML = 'جارٍ التحميل...';
+
+    try {
+        const data = await getAhlahJson('quran.json');
+        if (text) text.innerHTML = data.parts[String(partNumber)] || 'النص غير موجود.';
+    } catch (error) {
+        console.error(error);
+        if (text) text.innerHTML = 'حدث خطأ أثناء تحميل الجزء.';
+    }
+
+    if (typeof updateNavigationButtons === 'function') updateNavigationButtons('part', partNumber);
+    showPopup('part-content-popup');
+}
+
+/* تحديث سنة الفوتر تلقائياً */
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('#currentYear').forEach(function (el) {
+        el.textContent = new Date().getFullYear();
+    });
+});

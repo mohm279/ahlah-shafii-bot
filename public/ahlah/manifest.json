@@ -1,15 +1,24 @@
 {
   "name": "أهلّه - Ahlah",
-  "short_name": "Ahlah",
+  "short_name": "أهلّه",
   "description": "منصة إسلامية لأوقات الصلاة، القرآن الكريم، الأذكار، التقويم، والقبلة.",
-  "start_url": "/ahlah/index.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "dir": "rtl",
   "lang": "ar",
   "background_color": "#faf7ed",
   "theme_color": "#2E7D32",
   "orientation": "portrait-primary",
+  "categories": [
+    "education",
+    "lifestyle",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "https://i.ibb.co/KcqW6dRM/image.png",

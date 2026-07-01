@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2E7D32">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
     <floraspace>
@@ -70,7 +74,7 @@
         </div>
     </div>
 
-    <div class="footer">&copy; 2026 Ahlah </div>
+    <div class="footer">&copy; <span id="currentYear"></span> Ahlah </div>
 
     <div id="overlay" class="overlay" onclick="closePopup()"></div>
 
@@ -461,5 +465,14 @@
 
     
     <script src="script.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./service-worker.js')
+        .catch((error) => console.log('Service Worker registration failed:', error));
+    });
+  }
+</script>
 </body>
 </html>
